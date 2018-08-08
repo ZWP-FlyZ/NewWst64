@@ -27,9 +27,7 @@ def run():
     cp.reg_p=0.01
     
     
-    
-    
-    
+
     train_data= np.loadtxt(train_path);
     test_data=np.loadtxt(test_path);
     n=len(train_data);

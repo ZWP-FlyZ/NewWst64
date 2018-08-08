@@ -68,7 +68,7 @@ def run():
             os.makedirs(test_spa_path); 
             
         train_data_size = int((spa/100.0) * recNum);    
-        test_data_size = train_data_size;
+        test_data_size = train_data_size//10;
         print('train_size=%d,test_size=%d'%(train_data_size,test_data_size))     
         for case in range(1,case_cout+1):
             allrec = np.arange(0,recNum,dtype=np.int);

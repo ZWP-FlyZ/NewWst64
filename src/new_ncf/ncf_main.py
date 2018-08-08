@@ -17,6 +17,7 @@ case=1;
 train_path = 'E:/work/Dataset/ws/train_n/sparseness%d/training%d.txt'%(spa,case);
 test_path = 'E:/work/Dataset/ws/test_n/sparseness%d/test%d.txt'%(spa,case);
 cache_path = 'value_cache/spa%d_case%d.ckpt'%(spa,case);
+dbug_paht = 'E:/work/Dataset/wst64/rtdata1.txt';
 
 def run():
     cp = NcfCreParam();
@@ -28,8 +29,8 @@ def run():
     cp.reg_p=0.01
     
 
-    train_data= np.loadtxt(train_path);
-    test_data=np.loadtxt(test_path);
+    train_data= np.loadtxt(dbug_paht);
+    test_data=np.loadtxt(dbug_paht);
     n=len(train_data);
 
     tp.train_data=train_data;

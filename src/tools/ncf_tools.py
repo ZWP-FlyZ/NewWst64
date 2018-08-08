@@ -12,11 +12,22 @@ def del_non_data(rec_table):
     ind = np.where(rec_table[:,2]>0);
     return rec_table[ind,:][0];
 
+def del_non_data3D(rec_table):
+    
+    ind = np.where(rec_table[:,3]>0);
+    return rec_table[ind,:][0];
+
 def reoge_data(rec_table):
     rec_table = np.array(rec_table);
     rec_table = del_non_data(rec_table);
     return rec_table[:,0:2].astype(int),    \
         rec_table[:,2].reshape((-1,1)).astype(np.float32)
+
+def reoge_data3D(rec_table):
+    rec_table = np.array(rec_table);
+    rec_table = del_non_data3D(rec_table);
+    return rec_table[:,0:3].astype(int),    \
+        rec_table[:,3].reshape((-1,1)).astype(np.float32)
     
 
 if __name__ == '__main__':
