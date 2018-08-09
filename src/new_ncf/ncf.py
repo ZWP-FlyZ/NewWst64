@@ -9,6 +9,7 @@ Created on 2018年8月7日
 import tensorflow as tf;
 import time;
 from tools.ncf_tools import reoge_data,reoge_data3D;
+from tools.fwrite import fwrite_append;
 class hyb_ncf():
     '''
     >混合模型
@@ -411,22 +412,23 @@ class hyb_ncf3D_test():
         
         PT = tf.get_variable('PT',(self.uNum,self.tNum,hid_f),
                              dtype=tf.float32,
-                             initializer=tf.initializers.random_normal(stddev=1.0),
+                            
+                             # initializer=tf.initializers.random_normal(stddev=1.0),
                              regularizer=reg_func
                             );
         QT = tf.get_variable('QT',(self.sNum,self.tNum,hid_f),
                              dtype=tf.float32,
-                             initializer=tf.initializers.random_normal(stddev=1.0),
+                             # initializer=tf.initializers.random_normal(stddev=1.0),
                              regularizer=reg_func
                             );
         mPT = tf.get_variable('mPT',(self.uNum,self.tNum,hid_f),
                              dtype=tf.float32,
-                             initializer=tf.initializers.random_normal(stddev=1.0),
+                             # initializer=tf.initializers.random_normal(stddev=1.0),
                              regularizer=reg_func
                             );
         mQT = tf.get_variable('mQT',(self.sNum,self.tNum,hid_f),
                              dtype=tf.float32,
-                             initializer=tf.initializers.random_normal(stddev=1.0),
+                             # initializer=tf.initializers.random_normal(stddev=1.0),
                              regularizer=reg_func
                             );
         # 初始化 隐含特征矩阵
@@ -471,6 +473,7 @@ class hyb_ncf3D_test():
         train_data = reoge_data3D(NcfTraParm3D.train_data);
         test_data = reoge_data3D(NcfTraParm3D.test_data);
         testn = len(test_data[0]);
+        print(testn);
         global_step = tf.Variable(0,trainable=False,name='gs');
         ds = tf.data. \
                 Dataset.from_tensor_slices(train_data);
@@ -500,29 +503,38 @@ class hyb_ncf3D_test():
         
         save = tf.train.Saver();
         with tf.Session() as sess:
-            with tf.device('/cpu:0'):
-                if NcfTraParm3D.load_cache_rec:
-                    save.restore(sess,NcfTraParm3D.cache_rec_path);
-                else:
-                    sess.run(tf.global_variables_initializer()); 
-                
-                now = time.time();
-                for ep in range(NcfTraParm3D.epoch):
-                    sess.run(train_init_op);
-                    while True:
-                        try:
-                            _,vloss,gs=sess.run((train_step,loss,global_step));
-                            if gs%(100) == 0:
-                                print('ep%d\t loopstep:%d\t time:%.2f\t loss:%f'%(ep,gs,time.time()-now,vloss))
-                                now=time.time();
-                        except tf.errors.OutOfRangeError:
-                            break  
-                    sess.run(test_init_op);
-                    vmae,vrmse,vloss=sess.run((tmae,trmse,loss)); 
-                    print('ep%d结束 \t eponloss=%f\t test_mae=%f test_rmse=%f\n'%(ep ,vloss,vmae,vrmse));
-                
-                if NcfTraParm3D.cache_rec_path != '':
-                    save.save(sess,NcfTraParm3D.cache_rec_path)
+
+            if NcfTraParm3D.load_cache_rec:
+                save.restore(sess,NcfTraParm3D.cache_rec_path);
+            else:
+                sess.run(tf.global_variables_initializer()); 
+            
+            now = time.time();
+            eptime = now;
+            for ep in range(NcfTraParm3D.epoch):
+                sess.run(train_init_op);
+                while True:
+                    try:
+                        _,vloss,gs=sess.run((train_step,loss,global_step));
+                        if gs%(100) == 0:
+                            print('ep%d\t loopstep:%d\t time:%.2f\t loss:%f'%(ep,gs,time.time()-now,vloss))
+                            now=time.time();
+                    except tf.errors.OutOfRangeError:
+                        break  
+                sess.run(test_init_op);
+                vmae,vrmse,vloss=sess.run((tmae,trmse,loss));
+                eps = '==================================================\n'
+                eps += 'ep%d结束 \t eptime=%.2f\n' %(ep ,time.time()-eptime);
+                eps += 'test_mae=%f test_rmse=%f\n'%(vmae,vrmse);
+                eps += 'acttime=%s\n'%(time.asctime());
+                eps += '==================================================\n'
+                eptime = time.time();
+                print(eps);
+                if NcfTraParm3D.result_file_path != '': 
+                    fwrite_append(NcfTraParm3D.result_file_path,eps);
+            
+            if NcfTraParm3D.cache_rec_path != '':
+                save.save(sess,NcfTraParm3D.cache_rec_path)
         pass;
     
     

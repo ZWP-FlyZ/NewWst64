@@ -21,12 +21,12 @@ base_path = r'E:/work';
 if SysCheck.check()=='l':
     base_path='/home/zwp/work'
     
-origin_data_path = base_path+'/Dataset/wst64/rtdata1.txt';
+origin_data_path = base_path+'/Dataset/wst64/rtdata.txt';
 train_output_path = base_path+'/Dataset/wst64/train_n'
 test_output_path = base_path+'/Dataset/wst64/test_n'
 
 # 分割稀疏度列表
-spa_list=[15,20];
+spa_list=[1.0];
 
 # 每个稀疏度需要的例子数
 case_cout=10;
