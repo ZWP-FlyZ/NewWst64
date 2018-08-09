@@ -10,7 +10,7 @@ import numpy as np;
 import time;
 from tools import SysCheck;
 from new_ncf.ncf_param import NcfTraParm3D,NcfCreParam3D;
-from new_ncf.ncf import hyb_ncf3D;
+from new_ncf.ncf import hyb_ncf3D,hyb_ncf3D_test;
 
 
 spa=2.5;
@@ -28,7 +28,7 @@ def run():
     tp = NcfTraParm3D();
     cp.ust_shape=(142,4500,64);
     cp.hid_feat=32;
-    cp.hid_units=[64,32,16];
+    cp.hid_units=[32,16];
     cp.drop_p=0.00001
     cp.reg_p=0.01
     
@@ -42,14 +42,14 @@ def run():
     tp.test_data=test_data;
 
     tp.epoch=30;
-    tp.batch_size=5;
+    tp.batch_size=16;
     tp.learn_rate=0.01;
     tp.lr_decy_rate=0.99
     tp.lr_decy_step=int(n/tp.batch_size);
     tp.cache_rec_path=cache_path;
     tp.load_cache_rec=False;
     
-    model = hyb_ncf3D(cp);
+    model = hyb_ncf3D_test(cp);
     
     model.train(tp);
     
