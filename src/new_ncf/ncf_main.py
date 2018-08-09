@@ -36,7 +36,7 @@ def run():
     tp.train_data=train_data;
     tp.test_data=test_data;
     tp.epoch=30;
-    tp.batch_size=16;
+    tp.batch_size=1;
     tp.learn_rate=0.01;
     tp.lr_decy_rate=0.96
     tp.lr_decy_step=int(n/tp.batch_size);

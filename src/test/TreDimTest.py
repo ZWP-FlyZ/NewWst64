@@ -19,18 +19,21 @@ import time;
 # print(ba)
 # print(ba.shape)
 
-a = np.arange(24).reshape((4,3,2));
+a = np.arange(64).reshape((4,4,4));
 print(a);
-b = np.zeros((1,1,3,2))
-b[0,0,0,0]=1;
+u = np.arange(4).reshape([4,1]);
+s = np.arange(4).reshape([4,1]);
+ind = np.arange(4).reshape([4,1]);
 
-res = b*a;
+
+print(a[ind,u,s])
 
 
-print(res);
 
-t = np.sum(res,axis=(2,3));
-print(t);
+
+
+
+
 
 
 

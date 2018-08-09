@@ -195,6 +195,9 @@ class hyb_ncf3D():
         pass;
     
     
+    def _toOne(self,TG,O1,O2):
+        TG[O1[0],O2[0]]=1;
+    
     def toOneHot(self,feature):
         '''
         feature = [[U,S,T]]
@@ -208,9 +211,10 @@ class hyb_ncf3D():
         UT = tf.reshape(tf.matmul(U,T),[-1,1,self.uNum,self.tNum]);
         ST = tf.reshape(tf.matmul(S,T),[-1,1,self.sNum,self.tNum]);
         return UT,ST;
-    
+        
     def chooser(self,W,inputs):
         c = W * inputs;
+        print(c,W,inputs);
         c= tf.reduce_sum(c,axis=(2,3));
         return c;
         
@@ -318,28 +322,29 @@ class hyb_ncf3D():
         
         save = tf.train.Saver();
         with tf.Session() as sess:
-            if NcfTraParm3D.load_cache_rec:
-                save.restore(sess,NcfTraParm3D.cache_rec_path);
-            else:
-                sess.run(tf.global_variables_initializer()); 
-            
-            now = time.time();
-            for ep in range(NcfTraParm3D.epoch):
-                sess.run(train_init_op);
-                while True:
-                    try:
-                        _,vloss,gs=sess.run((train_step,loss,global_step));
-                        if gs%(10) == 0:
-                            print('ep%d\t loopstep:%d\t time:%.2f\t loss:%f'%(ep,gs,time.time()-now,vloss))
-                            now=time.time();
-                    except tf.errors.OutOfRangeError:
-                        break  
-                sess.run(test_init_op);
-                vmae,vrmse,vloss=sess.run((tmae,trmse,loss)); 
-                print('ep%d结束 \t eponloss=%f\t test_mae=%f test_rmse=%f\n'%(ep ,vloss,vmae,vrmse));
-            
-            if NcfTraParm3D.cache_rec_path != '':
-                save.save(sess,NcfTraParm3D.cache_rec_path)
+            with tf.device('/gpu:0'):
+                if NcfTraParm3D.load_cache_rec:
+                    save.restore(sess,NcfTraParm3D.cache_rec_path);
+                else:
+                    sess.run(tf.global_variables_initializer()); 
+                
+                now = time.time();
+                for ep in range(NcfTraParm3D.epoch):
+                    sess.run(train_init_op);
+                    while True:
+                        try:
+                            _,vloss,gs=sess.run((train_step,loss,global_step));
+                            if gs%(10) == 0:
+                                print('ep%d\t loopstep:%d\t time:%.2f\t loss:%f'%(ep,gs,time.time()-now,vloss))
+                                now=time.time();
+                        except tf.errors.OutOfRangeError:
+                            break  
+                    sess.run(test_init_op);
+                    vmae,vrmse,vloss=sess.run((tmae,trmse,loss)); 
+                    print('ep%d结束 \t eponloss=%f\t test_mae=%f test_rmse=%f\n'%(ep ,vloss,vmae,vrmse));
+                
+                if NcfTraParm3D.cache_rec_path != '':
+                    save.save(sess,NcfTraParm3D.cache_rec_path)
         pass;
     
     

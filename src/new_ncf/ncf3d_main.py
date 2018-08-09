@@ -13,7 +13,7 @@ from new_ncf.ncf_param import NcfTraParm3D,NcfCreParam3D;
 from new_ncf.ncf import hyb_ncf3D;
 
 
-spa=10;
+spa=2.5;
 case=1;
 base_path = r'E:/work';
 if SysCheck.check()=='l':
@@ -42,9 +42,9 @@ def run():
     tp.test_data=test_data;
 
     tp.epoch=30;
-    tp.batch_size=16;
+    tp.batch_size=5;
     tp.learn_rate=0.01;
-    tp.lr_decy_rate=0.96
+    tp.lr_decy_rate=0.99
     tp.lr_decy_step=int(n/tp.batch_size);
     tp.cache_rec_path=cache_path;
     tp.load_cache_rec=False;
