@@ -10,7 +10,7 @@ import numpy as np;
 import time;
 from tools import SysCheck;
 from new_ncf.ncf_param import NcfTraParm3D,NcfCreParam3D;
-from new_ncf.ncf import hyb_ncf3D,hyb_ncf3D_test;
+from new_ncf.ncf3d import hyb_ncf3D,hyb_ncf3D_test;
 
 
 spa=1.0;
@@ -44,13 +44,14 @@ def run():
     tp.test_data=test_data;
 
     tp.epoch=30;
-    tp.batch_size=100;
-    tp.learn_rate=0.1;
-    tp.lr_decy_rate=0.99
+    tp.batch_size=30;
+    tp.learn_rate=0.09;
+    tp.lr_decy_rate=1.0
     tp.lr_decy_step=int(n/tp.batch_size);
     tp.cache_rec_path=cache_path;
     tp.result_file_path=result_file;
     tp.load_cache_rec=False;
+    tp.summary_path='summary'
     
     model = hyb_ncf3D_test(cp);
     
