@@ -97,9 +97,12 @@ class hyb_ncf():
         Py=out;                    
         # 误差                   
         loss = tf.reduce_mean(tf.losses.huber_loss(Y,out));
+        tf.summary.scalar('loss',loss);
         # 评测误差
         mae = tf.reduce_mean(tf.abs(Y-out));
+        tf.summary.scalar('mae',mae);
         rmse = tf.sqrt(tf.reduce_mean((Y-out)**2));
+        tf.summary.scalar('rmse',rmse);
         return Py,loss,mae,rmse; 
     ############################# end  ##################################    
     
@@ -126,7 +129,7 @@ class hyb_ncf():
             
         Py,loss,tmae,trmse= self.create_model(feat, Y, self.create_param);
         
-        # loss+=tf.losses.get_regularization_loss;
+        loss+=tf.losses.get_regularization_loss();
         
         lr = tf.train.exponential_decay(NcfTraParm.learn_rate, global_step,
                                 NcfTraParm.lr_decy_step,
@@ -136,15 +139,18 @@ class hyb_ncf():
         train_step = tf.train.AdagradOptimizer(lr). \
                     minimize(loss, global_step );
         
-        
+        summ_meg = tf.summary.merge_all();
         save = tf.train.Saver();
         with tf.Session() as sess:
+            train_summ = tf.summary.FileWriter(NcfTraParm.summary_path+'/train',sess.graph);
+            test_summ =tf.summary.FileWriter(NcfTraParm.summary_path+'/test');
             if NcfTraParm.load_cache_rec:
                 save.restore(sess,NcfTraParm.cache_rec_path);
             else:
                 sess.run(tf.global_variables_initializer()); 
             
             now = time.time();
+            eptime = now;
             for ep in range(NcfTraParm.epoch):
                 sess.run(train_init_op);
                 while True:
@@ -152,12 +158,24 @@ class hyb_ncf():
                         _,vloss,gs=sess.run((train_step,loss,global_step));
                         if gs%(500) == 0:
                             print('ep%d\t loopstep:%d\t time:%.2f\t loss:%f'%(ep,gs,time.time()-now,vloss))
+                            summ = sess.run((summ_meg));
+                            train_summ.add_summary(summ, gs);
                             now=time.time();
                     except tf.errors.OutOfRangeError:
-                        print('to end');
                         break  
                 sess.run(test_init_op);
-                vmae,vrmse,vloss=sess.run((tmae,trmse,loss)); 
+                summ,vmae,vrmse,vloss=sess.run((summ_meg,tmae,trmse,loss));
+                test_summ.add_summary(summ, ep);
+                eps = '==================================================\n'
+                eps += 'ep%d结束 \t eptime=%.2f\n' %(ep ,time.time()-eptime);
+                eps += 'test_mae=%f test_rmse=%f\n'%(vmae,vrmse);
+                eps += 'acttime=%s\n'%(time.asctime());
+                eps += '==================================================\n'
+                eptime = time.time();
+                print(eps);
+                if NcfTraParm.result_file_path != '': 
+                    fwrite_append(NcfTraParm.result_file_path,eps);                
+                 
                 print('ep%d结束 \t eponloss=%f\t test_mae=%f test_rmse=%f\n'%(ep ,vloss,vmae,vrmse));
             
             if NcfTraParm.cache_rec_path != '':
