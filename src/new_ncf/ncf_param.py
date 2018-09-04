@@ -31,6 +31,8 @@ class NcfTraParm():
     lr_decy_rate=0; # 衰减率
     load_cache_rec=False;# 是否加载记录数据
     cache_rec_path='';# 缓存路径
+    result_file_path=''
+    summary_path = 'summary';
 
 class NcfCreParam3D():
     '''
@@ -59,3 +61,8 @@ class NcfTraParm3D():
     load_cache_rec=False;# 是否加载记录数据
     cache_rec_path='';# 缓存路径
     result_file_path='';# 训练中测试结果输出
+    summary_path=''; # 统计输出路径
+    
+    
+    
+    
