@@ -9,17 +9,11 @@ Created on 2018年8月4日
 import numpy as np;
 
 a = np.arange(9).reshape((3,3));
-b = np.array([[0,0,0],
-              [1,1,-1],
-              [2,2,2]]);
+b = np.array([[0,0],
+              [1,1],
+              [2,2]]);
+b[:,1] = np.where(b[:,1]>0,2-b[:,1],b[:,1]);
 
-print(a);
-print(b.shape);
-              
-print(np.dot(a,b));
-
-ind = np.where(b[:,2]>0)[0]
-print(b[ind,:])
-
+print(b);
 if __name__ == '__main__':
     pass
