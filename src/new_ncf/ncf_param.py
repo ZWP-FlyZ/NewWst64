@@ -33,6 +33,7 @@ class NcfTraParm():
     cache_rec_path='';# 缓存路径
     result_file_path=''
     summary_path = 'summary';
+    classif_size=1; # 分类类型数
 
 class NcfCreParam3D():
     '''

@@ -9,8 +9,12 @@ Created on 2018年9月4日
 import numpy as np;
 import time;
 import random;
+import os;
 from tools import SysCheck;
 from tools import localload;
+from tools import utils;
+from tools import fwrite;
+
 
 base_path = r'E:/work';
 if SysCheck.check()=='l':
@@ -18,7 +22,7 @@ if SysCheck.check()=='l':
 origin_path = base_path+'/Dataset/ws/rtmatrix.txt';
 ser_info_path=base_path+'/Dataset/ws/ws_info.txt';
 ser_info_more_path=base_path+'/Dataset/ws/ws_info_more.txt';
-
+loc_class_out = base_path+'/Dataset/ws/ws_classif_out.txt';
 
 def simple_km(data,k):
     datasize = len(data);
@@ -43,14 +47,28 @@ def simple_km(data,k):
     return cents,res;
     pass;
 
+
+def classf(carr,tagdir):
+    res = [];
+    for idx in tagdir:
+        if tagdir[idx][1] in carr:
+            res.append(idx);
+    fwrite.fwrite_append(loc_class_out, utils.arr2str(res));
+
+
+
+
 def run():
     
+    ser_loc = localload.load(ser_info_path);
     ser_loc_m = localload.load_locmore(ser_info_more_path);
+    os.remove(loc_class_out);
+    
     
     data=[];
     names=[];
     area=[];
-    k=4;
+    k=6;
     for sn in ser_loc_m:
         data.append(ser_loc_m[sn][1]);
         names.append(sn);
@@ -70,6 +88,7 @@ def run():
         print(tmp)
         print(tmp2);
         print();
+        classf(tmp2,ser_loc);   
     pass;
 
 if __name__ == '__main__':
