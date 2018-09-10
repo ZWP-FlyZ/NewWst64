@@ -26,7 +26,7 @@ origin_data = base_path+'/rtdata.txt';
 
 
 
-spas = [10];
+spas = [15,20];
 
 
 
@@ -103,7 +103,7 @@ def mf_base_run(spa,case):
 
 if __name__ == '__main__':
     for spa in spas:
-        for ca in range(1,2):
+        for ca in range(2,3):
             case = ca;
             mf_base_run(spa,case);
 

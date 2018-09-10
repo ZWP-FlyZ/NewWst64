@@ -37,9 +37,10 @@ def run():
         if an not in res1:
             res1[an]=0;
         res1[an]=res1[an]+1;
-    
+    cot=0;
     for i in res:
-        print(i,res[i]);
+        cot+=1;
+        print(cot,i,res[i]);
     print();
     for i in res1:
         print(i,res1[i]);    
