@@ -439,12 +439,12 @@ class hyb_ncf_local():
         # 误差                   
         # loss = tf.reduce_mean(tf.losses.huber_loss(Y,out));
         loss = tf.reduce_sum(tf.abs(Y-out));
-        tf.summary.scalar('loss',loss);
+        # tf.summary.scalar('loss',loss);
         # 评测误差
         mae = tf.reduce_mean(tf.abs(Y-out));
-        tf.summary.scalar('mae',mae);
+        # tf.summary.scalar('mae',mae);
         rmse = tf.sqrt(tf.reduce_mean((Y-out)**2));
-        tf.summary.scalar('rmse',rmse);
+        # tf.summary.scalar('rmse',rmse);
         return Py,loss,mae,rmse; 
     ############################# end  ##################################    
     
