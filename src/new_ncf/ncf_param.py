@@ -14,6 +14,7 @@ class NcfCreParam():
     hid_units=[]; # 网络各个隐层隐含单元数
     reg_p = 0.01;
     drop_p=0.001;
+    baseline_mu = 0.0;
 
 
 class NcfTraParm():
@@ -22,6 +23,11 @@ class NcfTraParm():
     '''
     train_data=None;# ([[u,s]],[[y]]) 二元组
     test_data=None;# ([[u,s]],[[y]]) 二元组
+    
+    u_invked=None;# 用户调用服务记录
+    u_invked_cot=None;# 用户调用服务数量
+    us_invked=None;# 用户服务调用情况表
+    
     datasize=0;# 训练数据总长度
     batchsize=1;# 默认批长度
     epoch=0;# 迭代次数
@@ -34,6 +40,9 @@ class NcfTraParm():
     result_file_path=''
     summary_path = 'summary';
     classif_size=1; # 分类类型数
+    
+    
+    
 
 class NcfCreParam3D():
     '''

@@ -3,3 +3,5 @@
 value_cache/
 *.zip
 result/
+summary/
+__pycache__/
