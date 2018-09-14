@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 2018年9月5日
+Created on 2018年9月14日
 
 @author: zwp12
 '''
@@ -13,9 +13,8 @@ import os;
 from tools import SysCheck;
 
 from new_ncf.ncf_param import NcfTraParm,NcfCreParam;
-from new_ncf.ncf import hyb_ncf_local;
+from new_ncf.ncf_more import ncf_pp_local;
 
-from new_ncf.ncf import hyb_ncf_local;
 
 
 from location import localtools
@@ -29,7 +28,7 @@ origin_data = base_path+'/rtdata.txt';
 
 
 
-spas = [2,5,10,15,20];
+spas = [2,5,10];
 
 
 
@@ -63,7 +62,6 @@ def mf_base_run(spa,case):
     tnow = time.time();
     train_sets = localtools.data_split_class(ser_class, trdata);
     test_sets = localtools.data_split_class(ser_class, ttrdata);
-    del trdata,ttrdata;
     print ('分类数据集结束，耗时 %.2f秒  \n'%((time.time() - tnow)));
     
     
@@ -77,10 +75,27 @@ def mf_base_run(spa,case):
     cp.drop_p=0.00001
     cp.reg_p=0.0001
     
+    # 处理用户访问服务记录 
+    R = np.zeros(cp.us_shape);
+    u = trdata[:,0].astype(np.int32);
+    s = trdata[:,1].astype(np.int32);
+    R[u,s]=1.0;
+    us_invked = [];
+    for cla in ser_class:
+        hot = np.zeros([cp.us_shape[1]],np.float32);
+        hot[cla]=1.0;
+        usi = R*hot;
+        nonzeroes = np.sqrt(np.count_nonzero(usi, axis=1));
+        noz = np.divide(1.0,nonzeroes,
+                        out=np.zeros_like(nonzeroes),where=nonzeroes!=0);
+        noz = np.reshape(noz,[-1,1]);
+        us_invked.append((usi*noz).astype(np.float32));
+    
+     
         
     tp.train_data=train_sets;
     tp.test_data=test_sets;
-    tp.epoch=45;
+    tp.epoch=40;
     tp.batch_size=5;
     tp.learn_rate=0.007;
     tp.lr_decy_rate=1.0
@@ -89,11 +104,12 @@ def mf_base_run(spa,case):
     tp.result_file_path= result_file;
     tp.load_cache_rec=False;
     tp.classif_size = len(train_sets);
+    tp.us_invked= us_invked;
     
     
     print ('训练模型开始');
     tnow = time.time();
-    model = hyb_ncf_local(cp);
+    model = ncf_pp_local(cp);
     
     model.train(tp);
                      
@@ -109,6 +125,7 @@ if __name__ == '__main__':
         for ca in range(1,5):
             case = ca;
             mf_base_run(spa,case);
+
 
 
 if __name__ == '__main__':
