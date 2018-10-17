@@ -29,7 +29,7 @@ origin_data = base_path+'/rtdata.txt';
 
 
 
-spas = [2,5,10,15,20];
+spas = [2,5];
 
 
 
@@ -41,7 +41,7 @@ def mf_base_run(spa,case):
     result_file= 'result/ws_spa%.1f_case%d.txt'%(spa,case);
     dbug_paht = 'E:/work/Dataset/wst64/rtdata1.txt';
     
-    loc_classes = base_path+'/Dataset/ws/ws_classif_out2.txt';
+    loc_classes = base_path+'/Dataset/ws/localinfo/ws_classif_out.txt';
     
     print('开始实验，稀疏度=%.1f,case=%d'%(spa,case));
     print ('加载训练数据开始');
@@ -80,9 +80,9 @@ def mf_base_run(spa,case):
         
     tp.train_data=train_sets;
     tp.test_data=test_sets;
-    tp.epoch=45;
+    tp.epoch=20;
     tp.batch_size=5;
-    tp.learn_rate=0.007;
+    tp.learn_rate=0.01;
     tp.lr_decy_rate=1.0
     tp.lr_decy_step=int(n/tp.batch_size);
     tp.cache_rec_path=cache_path;
@@ -109,7 +109,3 @@ if __name__ == '__main__':
         for ca in range(1,5):
             case = ca;
             mf_base_run(spa,case);
-
-
-if __name__ == '__main__':
-    pass

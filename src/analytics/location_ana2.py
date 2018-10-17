@@ -18,8 +18,9 @@ base_path = r'E:/work';
 if SysCheck.check()=='l':
     base_path='/home/zwp/work';
 origin_path = base_path+'/Dataset/ws/rtmatrix.txt';
-ser_info_path=base_path+'/Dataset/ws/ws_info.txt';
-ser_info_more_path=base_path+'/Dataset/ws/ws_info_more.txt';
+ser_info_path=base_path+'/Dataset/ws/localinfo/ws_info.txt';
+ser_info_more_path=base_path+'/Dataset/ws/localinfo/ws_info_more.txt';
+loc_class_out = base_path+'/Dataset/ws/localinfo/ws_classif_out.txt';
 
 
 def run():

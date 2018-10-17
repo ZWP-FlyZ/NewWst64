@@ -10,8 +10,8 @@ def load(path):
     locs={};
     with open(path) as f:
         for line in f:
-            ids, AS, loc = line.strip().split('\t');
-            uid = int(ids)-1;
+            ids, AS, loc,_,_ = line.strip().split('\t');
+            uid = int(ids);
             locs[uid]=(AS,loc);
     return  locs;       
 
@@ -19,9 +19,9 @@ def load_location_name(path):
     locs=set();
     with open(path) as f:
         for line in f:
-            _, _, loc = line.strip().split('\t');
+            _, _, loc,_,_ = line.strip().split('\t');
             locs.add(loc);
-    return  locs; 
+    return  list(locs); 
 
 def load_locmore(path):
     res={};
