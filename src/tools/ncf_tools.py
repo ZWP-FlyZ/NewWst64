@@ -9,13 +9,13 @@ import numpy as np;
 
 def del_non_data(rec_table):
     
-    ind = np.where(rec_table[:,2]>0);
-    return rec_table[ind,:][0];
+    ind = np.where(rec_table[:,2]>0)[0];
+    return rec_table[ind,:];
 
 def del_non_data3D(rec_table):
     
-    ind = np.where(rec_table[:,3]>0);
-    return rec_table[ind,:][0];
+    ind = np.where(rec_table[:,3]>0)[0];
+    return rec_table[ind,:];
 
 def reoge_data(rec_table):
     rec_table = np.array(rec_table);

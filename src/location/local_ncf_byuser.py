@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 2018年9月5日
+Created on 2018年10月17日
 
 @author: zwp12
 '''
-
 
 import numpy as np;
 import time;
@@ -27,7 +26,12 @@ if SysCheck.check()=='l':
     base_path='/home/zwp/work'
 origin_data = base_path+'/rtdata.txt';
 
-spas = [1,2,3,4,5];
+
+
+spas = [2,5];
+
+
+
 
 def mf_base_run(spa,case):
     train_path = base_path+'/Dataset/ws/train_n/sparseness%.1f/training%d.txt'%(spa,case);
@@ -36,14 +40,14 @@ def mf_base_run(spa,case):
     result_file= 'result/ws_spa%.1f_case%d.txt'%(spa,case);
     dbug_paht = 'E:/work/Dataset/wst64/rtdata1.txt';
     
-    loc_classes = base_path+'/Dataset/ws/localinfo/ws_classif_out.txt';
+    loc_classes = base_path+'/Dataset/ws/localinfo/ws_classif_out_by_user.txt';
     
     print('开始实验，稀疏度=%.1f,case=%d'%(spa,case));
     print ('加载训练数据开始');
     now = time.time();
     trdata = np.loadtxt(train_path, dtype=float);
-    ser_class = localtools.load_classif(loc_classes);
-    classiy_size = len(ser_class);
+    user_class = localtools.load_classif(loc_classes);
+    classiy_size = len(user_class);
     n = np.alen(trdata);
     print ('加载训练数据完成，耗时 %.2f秒，数据总条数%d  \n'%((time.time() - now),n));
     
@@ -56,10 +60,12 @@ def mf_base_run(spa,case):
     
     print ('分类数据集开始');
     tnow = time.time();
-    train_sets = localtools.data_split_class(ser_class, trdata);
-    test_sets = localtools.data_split_class(ser_class, ttrdata);
+    train_sets = localtools.data_split_class_byuser(user_class, trdata);
+    test_sets = localtools.data_split_class_byuser(user_class, ttrdata);
     del trdata,ttrdata;
     print ('分类数据集结束，耗时 %.2f秒  \n'%((time.time() - tnow)));
+    
+    
     
     
     cp = NcfCreParam();
@@ -73,7 +79,7 @@ def mf_base_run(spa,case):
         
     tp.train_data=train_sets;
     tp.test_data=test_sets;
-    tp.epoch=15;
+    tp.epoch=20;
     tp.batch_size=5;
     tp.learn_rate=0.007;
     tp.lr_decy_rate=1.0

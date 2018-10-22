@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 2018年9月11日
+Created on 2018年10月17日
 
 @author: zwp12
 '''
@@ -19,9 +19,9 @@ base_path = r'E:/work';
 if SysCheck.check()=='l':
     base_path='/home/zwp/work';
 origin_path = base_path+'/Dataset/ws/rtmatrix.txt';
-ser_info_path=base_path+'/Dataset/ws/localinfo/ws_info.txt';
-ser_info_more_path=base_path+'/Dataset/ws/localinfo/ws_info_more.txt';
-loc_class_out = base_path+'/Dataset/ws/localinfo/ws_classif_out.txt';
+user_info_path=base_path+'/Dataset/ws/localinfo/user_info.txt';
+user_info_more_path=base_path+'/Dataset/ws/localinfo/user_info_more.txt';
+loc_class_out = base_path+'/Dataset/ws/localinfo/ws_classif_out_by_user.txt';
 
 def simple_km(data,k,di=1.0):
     datasize = len(data);
@@ -74,8 +74,8 @@ def write2file(res):
 
 def run():
     
-    ser_loc = localload.load(ser_info_path);
-    ser_loc_m = localload.load_locmore(ser_info_more_path);
+    user_loc = localload.load_userinfo(user_info_path)
+    user_loc_m = localload.load_locmore(user_info_more_path);
     R = np.loadtxt(origin_path,np.float);
     
     os.remove(loc_class_out);
@@ -83,28 +83,28 @@ def run():
     idx = np.where(R<0);
     R[idx]=0;
     
-    ser_sum = np.sum(R,axis=0);
-    ser_cot = np.count_nonzero(R, axis=0);
-    ser_mean = np.divide(ser_sum,ser_cot,
-        out=np.zeros_like(ser_sum),where=ser_cot!=0);
-    all_mean = np.sum(ser_sum)/np.sum(ser_cot);
-    ser_mean[np.where(ser_cot==0)] = all_mean;
+    user_sum = np.sum(R,axis=1);
+    user_cot = np.count_nonzero(R, axis=1);
+    user_mean = np.divide(user_sum,user_cot,
+        out=np.zeros_like(user_sum),where=user_cot!=0);
+    all_mean = np.sum(user_sum)/np.sum(user_cot);
+    user_mean[np.where(user_cot==0)] = all_mean;
     
     data=[];
     names=[];
     area=[];
-    k=8;
-    for sid in range(5825):
-        sn = ser_loc[sid][1];
-        names.append(sn);
-        area.append(ser_loc_m[sn][0])
+    k=2;
+    for uid in range(339):
+        un = user_loc[uid][1];
+        names.append(un);
+        area.append(user_loc_m[un][0])
         lc = [];
-        lc.extend(ser_loc_m[sn][1]);
-        lc.append(ser_mean[sid]);
+        lc.extend(user_loc[uid][2]);
+        lc.append(user_mean[uid]);
         data.append(lc);
     data=np.array(data);
 #     np.random.shuffle(data);
-    cent,res = simple_km(data,k,8);
+    cent,res = simple_km(data,k,1);
     
     print(cent);
     print(res);

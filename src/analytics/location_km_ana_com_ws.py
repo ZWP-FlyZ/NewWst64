@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 2018年9月11日
+Created on 2018年10月19日
 
 @author: zwp12
 '''
+
+'''
+在服务聚类上使用用户聚类结果
+'''
+
 
 import numpy as np;
 import time;
@@ -13,7 +18,7 @@ from tools import SysCheck;
 from tools import localload;
 from tools import utils;
 from tools import fwrite;
-
+from location import localtools
 
 base_path = r'E:/work';
 if SysCheck.check()=='l':
@@ -22,6 +27,9 @@ origin_path = base_path+'/Dataset/ws/rtmatrix.txt';
 ser_info_path=base_path+'/Dataset/ws/localinfo/ws_info.txt';
 ser_info_more_path=base_path+'/Dataset/ws/localinfo/ws_info_more.txt';
 loc_class_out = base_path+'/Dataset/ws/localinfo/ws_classif_out.txt';
+
+loc_class_for_user = base_path+'/Dataset/ws/localinfo/ws_classif_out_by_user.txt';
+
 
 def simple_km(data,k,di=1.0):
     datasize = len(data);
@@ -76,19 +84,24 @@ def run():
     
     ser_loc = localload.load(ser_info_path);
     ser_loc_m = localload.load_locmore(ser_info_more_path);
+    user_class = localtools.load_classif(loc_class_for_user);
     R = np.loadtxt(origin_path,np.float);
     
     os.remove(loc_class_out);
 
     idx = np.where(R<0);
     R[idx]=0;
-    
-    ser_sum = np.sum(R,axis=0);
-    ser_cot = np.count_nonzero(R, axis=0);
-    ser_mean = np.divide(ser_sum,ser_cot,
-        out=np.zeros_like(ser_sum),where=ser_cot!=0);
-    all_mean = np.sum(ser_sum)/np.sum(ser_cot);
-    ser_mean[np.where(ser_cot==0)] = all_mean;
+    user_mean = [];
+    for uc in user_class:
+        UR= R[uc];
+        ser_sum = np.sum(UR,axis=0);
+        ser_cot = np.count_nonzero(UR, axis=0);
+        uc_ser_mean = np.divide(ser_sum,ser_cot,
+            out=np.zeros_like(ser_sum),where=ser_cot!=0);
+        all_mean = np.sum(ser_sum)/np.sum(ser_cot);
+        uc_ser_mean[np.where(ser_cot==0)] = all_mean;
+        
+        user_mean.append(uc_ser_mean);
     
     data=[];
     names=[];
@@ -100,7 +113,8 @@ def run():
         area.append(ser_loc_m[sn][0])
         lc = [];
         lc.extend(ser_loc_m[sn][1]);
-        lc.append(ser_mean[sid]);
+        for um in user_mean:
+            lc.append(um[sid]);
         data.append(lc);
     data=np.array(data);
 #     np.random.shuffle(data);

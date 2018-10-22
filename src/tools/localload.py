@@ -34,3 +34,13 @@ def load_locmore(path):
             res[loc]=(fag,[lat,lgt]);
     return res;
 
+def load_userinfo(path):
+    locs={};
+    with open(path) as f:
+        for line in f:
+            ids, AS, loc,lat,lngt = line.strip().split('\t');
+            uid = int(ids);
+            locs[uid]=(AS,loc,[float(lat),float(lngt)]);
+    return  locs;
+
+
