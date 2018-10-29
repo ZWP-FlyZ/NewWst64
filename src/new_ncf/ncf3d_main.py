@@ -10,10 +10,10 @@ import numpy as np;
 import time;
 from tools import SysCheck;
 from new_ncf.ncf_param import NcfTraParm3D,NcfCreParam3D;
-from new_ncf.ncf3d import hyb_ncf3D,hyb_ncf3D_test;
+from new_ncf.ncf3d import hyb_ncf3D,hyb_ncf3D_test,simple_ncf3D;
 
 
-spa=1.0;
+spa=5.0;
 case=1;
 base_path = r'E:/work';
 if SysCheck.check()=='l':
@@ -30,7 +30,7 @@ def run():
     tp = NcfTraParm3D();
     cp.ust_shape=(142,4500,64);
     cp.hid_feat=32;
-    cp.hid_units=[64,32,16];
+    cp.hid_units=[64,32,16,8];
     cp.drop_p=0.00001
     cp.reg_p=0.00001
     
@@ -40,12 +40,18 @@ def run():
     test_data=np.loadtxt(test_path);
     n=len(train_data);
  
+#     rge=np.arange(0,20);
+#     idx = np.where(np.isin(train_data[:,2],rge))[0];
+#     train_data = train_data[idx]
+#     idx = np.where(np.isin(test_data[:,2],rge))[0];
+#     test_data = test_data[idx];
+    
     tp.train_data=train_data;
     tp.test_data=test_data;
 
-    tp.epoch=30;
-    tp.batch_size=30;
-    tp.learn_rate=0.09;
+    tp.epoch=50;
+    tp.batch_size=20;
+    tp.learn_rate=0.02;
     tp.lr_decy_rate=1.0
     tp.lr_decy_step=int(n/tp.batch_size);
     tp.cache_rec_path=cache_path;
@@ -53,7 +59,7 @@ def run():
     tp.load_cache_rec=False;
     tp.summary_path='summary'
     
-    model = hyb_ncf3D_test(cp);
+    model = simple_ncf3D(cp);
     
     model.train(tp);
     

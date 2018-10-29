@@ -27,7 +27,7 @@ if SysCheck.check()=='l':
     base_path='/home/zwp/work'
 origin_data = base_path+'/rtdata.txt';
 
-spas = [1,2,3,4,5];
+spas = [5,10,15,20];
 
 def mf_base_run(spa,case):
     train_path = base_path+'/Dataset/ws/train_n/sparseness%.1f/training%d.txt'%(spa,case);
@@ -73,7 +73,7 @@ def mf_base_run(spa,case):
         
     tp.train_data=train_sets;
     tp.test_data=test_sets;
-    tp.epoch=15;
+    tp.epoch=40;
     tp.batch_size=5;
     tp.learn_rate=0.007;
     tp.lr_decy_rate=1.0
