@@ -39,15 +39,17 @@ def model(x,y):
 if __name__ == '__main__':
     run();
     
-    x=[[1,2,3],[4,5,6]];
-    y=[[4,5,6],[1,2,3]];
-    xp = tf.placeholder(tf.float32, [None,3],"x");
-    yp = tf.placeholder(tf.float32, [None,3],"y");
-    rx = tf.random_normal([2,3]);
-    z = model(xp,yp);
-    with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
-        print(sess.run(z,{xp:rx,yp:rx}));
+#     x=[[1,2,3],[4,5,6]];
+#     y=[[4,5,6],[1,2,3]];
+#     xp = tf.placeholder(tf.float32, [None,3],"x");
+#     yp = tf.placeholder(tf.float32, [None,3],"y");
+#     rx = tf.random_normal([2,3]);
+#     z = model(xp,yp);
+#     with tf.Session() as sess:
+#         sess.run(tf.global_variables_initializer())
+#         print(sess.run(z,{xp:rx,yp:rx}));
+    
+    print(tf.__version__)
     
     
     pass

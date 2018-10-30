@@ -13,8 +13,8 @@ import time;
 from tools import SysCheck;
 from tools import fwrite;
 
-epon=20;
-spas=[5.0,10.0];
+epon=1;
+spas=[5.0,10.0,15,20];
 base_path = r'E:/work';
 if SysCheck.check()=='l':
     base_path='/home/zwp/work'

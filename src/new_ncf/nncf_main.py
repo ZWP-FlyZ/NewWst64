@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 2018年8月8日
+Created on 2018年10月30日
 
 @author: zwp12
 '''
@@ -9,8 +9,9 @@ Created on 2018年8月8日
 import numpy as np;
 import time;
 from tools import SysCheck;
-from new_ncf.ncf_param import NcfTraParm3D,NcfCreParam3D;
-from new_ncf.ncf3d import hyb_ncf3D,hyb_ncf3D_test,simple_ncf3D;
+from new_ncf.ncf_param import NcfTraParmUST,NcfCreParamUST;
+from new_ncf.nncf import simple_ncfUST;
+
 
 
 spa=5.0;
@@ -26,8 +27,8 @@ dbug_paht = 'E:/work/Dataset/wst64/rtdata1.txt';
 
 
 def run():
-    cp = NcfCreParam3D();
-    tp = NcfTraParm3D();
+    cp = NcfTraParmUST();
+    tp = NcfCreParamUST();
     cp.ust_shape=(142,4500,64);
     cp.hid_feat=32;
     cp.hid_units=[64,32,16];
@@ -59,12 +60,13 @@ def run():
     tp.load_cache_rec=False;
     tp.summary_path='summary'
     
-    model = simple_ncf3D(cp);
+    model = simple_ncfUST(cp);
     
-    model.train(tp);
+    model.train_ncf( tp);
     
     pass;
 
 if __name__ == '__main__':
     run();
     pass
+

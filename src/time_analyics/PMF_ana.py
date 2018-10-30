@@ -69,7 +69,7 @@ def evel(test,predict):
         ret.append(mae(tt,tp));
     return ret;
 
-spas=[5,15,20];
+spas=[15,20];
 case=1;
 eponch=1;
 

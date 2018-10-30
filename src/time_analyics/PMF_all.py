@@ -10,8 +10,8 @@ import time;
 from tools import SysCheck;
 from tools import fwrite;
 
-epon=2;
-spas=[5.0];
+epon=3;
+spas=[5,10,15,20];
 base_path = r'E:/work';
 if SysCheck.check()=='l':
     base_path='/home/zwp/work'
@@ -147,7 +147,7 @@ def run():
             predict = np.zeros_like(train);
             for t in range(64):
                 print('时间片%d预测开始'%t);
-                predict[:,:,t] = pmf(train[:,:,t],20,30,0.01,0.01);
+                predict[:,:,t] = pmf(train[:,:,t],32,50,0.01,0.001);
                 print(mae(test[:,:,t], predict[:,:,t]));
             print('预测结束，耗时 %.2f秒\n'%((time.time() - now)))
              

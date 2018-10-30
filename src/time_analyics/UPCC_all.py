@@ -205,7 +205,7 @@ def run():
             predict = np.zeros_like(train);
             for t in range(64):
                 print('时间片%d预测开始'%t);
-                predict[:,:,t] = ipcc(train[:,:,t],10);
+                predict[:,:,t] = upcc(train[:,:,t],10);
                 print(mae(test[:,:,t], predict[:,:,t]));
             print('预测结束，耗时 %.2f秒\n'%((time.time() - now)))
              

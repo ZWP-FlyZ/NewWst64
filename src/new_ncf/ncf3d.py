@@ -444,14 +444,14 @@ class simple_ncf3D():
         U,S,T = self.toUSToneHot(feat);
         
         
-        Pu = tf.layers.dense(inputs=U,units=hid_f,
+        Pu = tf.layers.dense(inputs=U,units=hid_f,use_bias=False,
                            #  kernel_initializer=initializers.random_normal(stddev=2),
                             kernel_regularizer=reg_func);
 
-        Qs = tf.layers.dense(inputs=S,units=hid_f,
+        Qs = tf.layers.dense(inputs=S,units=hid_f,use_bias=False,
                            #  kernel_initializer=initializers.random_normal(stddev=2),
                             kernel_regularizer=reg_func);
-        Rt = tf.layers.dense(inputs=T,units=hid_f,
+        Rt = tf.layers.dense(inputs=T,units=hid_f,use_bias=False,
                            #  kernel_initializer=initializers.random_normal(stddev=2),
                             kernel_regularizer=reg_func);
         
