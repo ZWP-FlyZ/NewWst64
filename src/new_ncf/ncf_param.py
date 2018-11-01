@@ -106,4 +106,12 @@ class NcfTraParmUST():
     load_cache_rec=False;# 是否加载记录数据
     cache_rec_path='';# 缓存路径
     result_file_path='';# 训练中测试结果输出
-    summary_path=''; # 统计输出路径    
+    summary_path=''; # 统计输出路径  
+    rnn_unit=0;# rnn中隐特征的数量
+    seq_len=0;# 单时间序列长度
+    time_range=(0,0);# 历史数据长度（开始，结束）
+    rnn_learn_rat=0;# rnn的学习率
+    rnn_epoch=0;    # rnn的训练遍数
+    
+    
+      
