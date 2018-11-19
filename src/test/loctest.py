@@ -11,10 +11,10 @@ from tools import localload;
 
 
 
-path = 'E:/work/Dataset/ws/ws_info.txt';
+path = 'E:/work/Dataset/ws/localinfo/user_info.txt';
 
 
-serve_loc = localload.load(path);
+serve_loc = localload.load_userinfo(path);
 
 for i in serve_loc:
     print(i,serve_loc[i]);

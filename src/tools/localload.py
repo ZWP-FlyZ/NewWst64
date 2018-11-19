@@ -10,7 +10,7 @@ def load(path):
     locs={};
     with open(path) as f:
         for line in f:
-            ids, AS, loc,_,_ = line.strip().split('\t');
+            ids, AS, loc,_,_,ip = line.strip().split('\t');
             uid = int(ids);
             locs[uid]=(AS,loc);
     return  locs;       
@@ -19,7 +19,7 @@ def load_location_name(path):
     locs=set();
     with open(path) as f:
         for line in f:
-            _, _, loc,_,_ = line.strip().split('\t');
+            _, _, loc,_,_,ip = line.strip().split('\t');
             locs.add(loc);
     return  list(locs); 
 
@@ -38,7 +38,10 @@ def load_userinfo(path):
     locs={};
     with open(path) as f:
         for line in f:
-            ids, AS, loc,lat,lngt = line.strip().split('\t');
+            ids, AS, loc,lat,lngt,ip = line.strip().split('\t');
+            ip=ip.split('.');
+            ip = list(map(lambda x:int(x),ip));
+            print(ip);
             uid = int(ids);
             locs[uid]=(AS,loc,[float(lat),float(lngt)]);
     return  locs;

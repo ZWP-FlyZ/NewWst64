@@ -58,6 +58,74 @@ def simple_km(data,k,di=1.0):
     pass;
 
 
+
+
+'''
+haversine 公式
+'''
+
+
+
+def haversine( lat1, lon1, lat2,lon2,r=6371): # 经度1，纬度1，经度2，纬度2 （十进制度数）
+    """
+    """
+    # 将十进制度数转化为弧度
+    lon1,lat1,lon2, lat2 = map(np.radians, [lon1,lat1,lon2, lat2])
+    # haversine公式
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
+    c = 2 * np.arcsin(np.sqrt(a)) 
+    r = r # 地球平均半径，单位为公里
+    return c * r # 输出为公里
+
+
+
+def simple_km2(data,k,di=1.0):
+    datasize = len(data);
+    di = float(di);
+    if k<1 or  datasize<k:
+        raise ValueError('data,k err');
+    rep=0;
+#     edg=180.0/di;
+#     edg2=  edg*2;
+#     data[:,0]=data[:,0]/di;
+#     data[:,1]=data[:,1]/(di*2.0);
+    cents=data[random.sample(range(0,datasize),k)];
+    last_c = cents;
+    
+    while True:
+        res = [[] for _ in range(k)];
+        for i in range(datasize):
+            
+            
+            # 计算距离
+            dis_lg = haversine(cents[:,0],cents[:,1],data[i,0],data[i,1],r=di);
+            dis_lg = np.reshape(dis_lg,[-1,1])**2;
+            dis_oth = np.abs(cents[:,2:]-data[i,2:])**2;
+            
+            dis = np.concatenate((dis_lg,dis_oth),axis=1);
+            dis = np.sum(dis,axis=1);
+            
+            tagk= np.argmin(dis);
+            res[tagk].append(i);
+        last_c = np.copy(cents);
+        for i in range(k):
+            cents[i]=np.mean(data[res[i]],axis=0);    
+        bout = np.sum(cents-last_c);
+        if bout==0:break;
+        rep+=1;
+        if rep%1 == 0:
+            print('rep=%d,delta=%f'%(rep,bout));
+        
+
+    return cents,res;
+    pass;
+
+
+
+
+
 def classf(carr,tagdir):
     res = [];
     for idx in tagdir:
@@ -70,15 +138,13 @@ def write2file(res):
     for li in res:
         fwrite.fwrite_append(loc_class_out, utils.arr2str(li));
 
-
-
 def run():
     
     user_loc = localload.load_userinfo(user_info_path)
     user_loc_m = localload.load_locmore(user_info_more_path);
     R = np.loadtxt(origin_path,np.float);
-    
-    os.remove(loc_class_out);
+    if os.path.isfile(loc_class_out):
+        os.remove(loc_class_out);
 
     idx = np.where(R<0);
     R[idx]=0;
@@ -93,7 +159,7 @@ def run():
     data=[];
     names=[];
     area=[];
-    k=2;
+    k=3;
     for uid in range(339):
         un = user_loc[uid][1];
         names.append(un);
@@ -103,11 +169,12 @@ def run():
         lc.append(user_mean[uid]);
         data.append(lc);
     data=np.array(data);
-#     np.random.shuffle(data);
-    cent,res = simple_km(data,k,1);
+
+    cent,res = simple_km2(data,k,k);
     
     print(cent);
     print(res);
+    write2file(res);
     
     for i in range(k):
         tmp=[];
@@ -120,7 +187,7 @@ def run():
         print(tmp2);
         print();
         
-    write2file(res);   
+
     pass;
 
 if __name__ == '__main__':

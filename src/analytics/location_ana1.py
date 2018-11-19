@@ -14,6 +14,10 @@ import time;
 from tools import SysCheck;
 from tools import localload;
 
+import matplotlib.pyplot as plt
+
+
+
 base_path = r'E:/work';
 if SysCheck.check()=='l':
     base_path='/home/zwp/work';
@@ -38,14 +42,28 @@ def run():
         if an not in res1:
             res1[an]=0;
         res1[an]=res1[an]+1;
-    cot=0;
-    for i in res:
-        cot+=1;
-        print(cot,i,res[i]);
+    
+    res = sorted(res.items(), key=lambda p:p[1], reverse=True)
+        
+
+    Y = [];
+    for i,item in enumerate(res):
+        print(i,item);
+        Y.append(item[1]);
+    
+    Y = np.array(Y);
+    X = np.arange(len(Y));
+    
+    plt.bar(X, Y);
+    plt.ylabel('number of services');
+    plt.show();
+        
+        
+        
     print();
-    for i in res1:
-        print(i,res1[i]);    
-    pass;
+#     for i in res1:
+#         print(i,res1[i]);    
+#     pass;
 
 
 if __name__ == '__main__':
