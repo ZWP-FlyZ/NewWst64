@@ -15,6 +15,8 @@ from tools import SysCheck;
 from new_ncf.ncf_param import NcfTraParm,NcfCreParam;
 from new_ncf.ncf_more import ncf_pp_local;
 
+
+
 from location import localtools
 from new_ncf.ncf3d_main import spa
 
@@ -25,7 +27,10 @@ if SysCheck.check()=='l':
 origin_data = base_path+'/rtdata.txt';
 
 
-spas = [2];
+
+spas = [5];
+
+
 
 
 def mf_base_run(spa,case):
@@ -35,7 +40,7 @@ def mf_base_run(spa,case):
     result_file= 'result/ws_spa%.1f_case%d.txt'%(spa,case);
     dbug_paht = 'E:/work/Dataset/wst64/rtdata1.txt';
     
-    loc_classes = base_path+'/Dataset/ws/ws_classif_out.txt';
+    loc_classes = base_path+'/Dataset/ws/localinfo/ws_content_classif_out.txt';
     
     print('开始实验，稀疏度=%.1f,case=%d'%(spa,case));
     print ('加载训练数据开始');
@@ -117,7 +122,7 @@ def mf_base_run(spa,case):
 
 if __name__ == '__main__':
     for spa in spas:
-        for ca in range(2,5):
+        for ca in range(1,5):
             case = ca;
             mf_base_run(spa,case);
 
