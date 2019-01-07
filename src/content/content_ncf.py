@@ -27,10 +27,29 @@ if SysCheck.check()=='l':
 origin_data = base_path+'/rtdata.txt';
 
 
+'''
+spa20
+uclass 1:
+    class 6 :0.35-0.37
+    class12 :效果变差
+    class4:0.355-0.37
+    class3: 效果变好 0 .34
+    class2:不好
+    class1:常规
 
-spas = [5];
+uclass 3:
+    class 6 :比3好一些
+    class12 :
+    class4
+    class3:变差
+    class2:
+    class1:
 
 
+'''
+
+
+spas = [20];
 
 
 def mf_base_run(spa,case):
@@ -63,7 +82,6 @@ def mf_base_run(spa,case):
     train_sets = localtools.data_split_class(ser_class, trdata);
     test_sets = localtools.data_split_class(ser_class, ttrdata);
     print ('分类数据集结束，耗时 %.2f秒  \n'%((time.time() - tnow)));
-    
     
     
     
@@ -122,7 +140,7 @@ def mf_base_run(spa,case):
 
 if __name__ == '__main__':
     for spa in spas:
-        for ca in range(1,5):
+        for ca in range(1,2):
             case = ca;
             mf_base_run(spa,case);
 
